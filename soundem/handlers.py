@@ -12,7 +12,7 @@ def bad_request_handler(e):
 
 
 @app.errorhandler(401)
-def bad_request_handler(e):
+def unauthorized_handler(e):
     return jsonify({
         'status_code': 401,
         'detail': 'Unauthorized'
@@ -20,7 +20,7 @@ def bad_request_handler(e):
 
 
 @app.errorhandler(404)
-def bad_request_handler(e):
+def not_found_handler(e):
     return jsonify({
         'status_code': 404,
         'detail': 'Not Found'
