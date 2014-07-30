@@ -2,6 +2,7 @@ from flask import jsonify, request
 from flask.ext.security import utils
 
 from soundem import app, db
+from .decorators import auth_token_required
 from .models import Artist, Album, Song, Favorite, user_datastore
 
 
@@ -78,6 +79,7 @@ def register():
 
 
 @app.route('/api/v1/artists', methods=['GET'])
+@auth_token_required
 def get_artists():
     artists = []
 
@@ -93,6 +95,7 @@ def get_artists():
 
 
 @app.route('/api/v1/albums', methods=['GET'])
+@auth_token_required
 def get_albums():
     albums = []
 
@@ -107,6 +110,7 @@ def get_albums():
 
 
 @app.route('/api/v1/songs', methods=['GET'])
+@auth_token_required
 def get_songs():
     songs = []
 
