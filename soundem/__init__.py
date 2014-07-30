@@ -20,4 +20,4 @@ app.config['SECURITY_CONFIRMABLE'] = False
 # Initialize database
 db = SQLAlchemy(app)
 
-from soundem import models, views
+from soundem import models, views, handlers
