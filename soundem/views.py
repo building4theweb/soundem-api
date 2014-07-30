@@ -1,8 +1,47 @@
 from flask import jsonify, request
+from flask.ext.security import utils
 
 from soundem import app, db
 from .models import Artist, Album, Song, Favorite, user_datastore
 
+
+@app.route('/api/v1/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    errors = {}
+
+    if not email:
+        errors['email'] = 'Field is required.'
+
+    if not password:
+        errors['password'] = 'Field is required.'
+
+    user = user_datastore.get_user(email)
+
+    if not user:
+        errors['email'] = 'User does not exist.'
+
+    if not utils.verify_and_update_password(password, user):
+        errors['password'] = 'Invalid password.'
+
+    if not user.is_active():
+        errors['email'] = 'User is not active.'
+
+    if errors:
+        return jsonify({'errors': errors}), 400
+
+    utils.login_user(user)
+
+    user_data = {
+        'id': user.id,
+        'email': user.email,
+        'active': user.is_active(),
+        'token': user.get_auth_token()
+    }
+
+    return jsonify({'user': user_data})
 
 @app.route('/api/v1/register', methods=['POST'])
 def register():
@@ -17,7 +56,7 @@ def register():
     if not password:
         errors['password'] = 'Field is required.'
 
-    existing_user = user_datastore.find_user(email=email)
+    existing_user = user_datastore.get_user(email=email)
 
     if existing_user:
         errors['email'] = 'Email is already taken'
@@ -31,7 +70,8 @@ def register():
     user_data = {
         'id': user.id,
         'email': user.email,
-        'active': user.active
+        'active': user.is_active(),
+        'token': user.get_auth_token()
     }
 
     return jsonify({'user': user_data}), 201
