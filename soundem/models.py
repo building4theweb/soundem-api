@@ -82,8 +82,9 @@ class Favorite(db.Model):
     song = db.relationship('Song',
                            backref=db.backref('favorites', lazy='dynamic'))
 
-    def __init__(self, song):
+    def __init__(self, song, user):
         self.song = song
+        self.user = user
 
     def __repr__(self):
         return '<Favorite %r>' % self.song_id

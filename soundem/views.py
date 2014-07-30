@@ -44,6 +44,7 @@ def login():
 
     return jsonify({'user': user_data})
 
+
 @app.route('/api/v1/register', methods=['POST'])
 def register():
     data = request.get_json()
@@ -126,3 +127,29 @@ def get_songs():
         })
 
     return jsonify({'songs': songs})
+
+
+@app.route('/api/v1/songs/<int:song_id>/favorite', methods=['PUT'])
+@auth_token_required
+def favorite_song(song_id):
+    song = Song.query.filter_by(id=song_id).first_or_404()
+    favorite = Favorite.query.filter_by(song=song, user=current_user).first()
+
+    if favorite:
+        is_favorite = False
+        db.session.delete(favorite)
+    else:
+        is_favorite = True
+        favorite = Favorite(song=song, user=current_user)
+        db.session.add(favorite)
+
+    db.session.commit()
+
+    song_data = {
+        'id': song.id,
+        'name': song.name,
+        'album': song.album.id,
+        'favorite': is_favorite
+    }
+
+    return jsonify({'song': song_data})
