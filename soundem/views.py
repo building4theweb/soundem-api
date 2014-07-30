@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from flask.ext.security import utils
+from flask.ext.security import utils, current_user
 
 from soundem import app, db
 from .decorators import auth_token_required
@@ -115,7 +115,9 @@ def get_songs():
     songs = []
 
     for song in Song.query.all():
-        favorite = Favorite.query.filter_by(song=song).first()
+        favorite = Favorite.query.filter_by(
+            song=song, user=current_user).first()
+
         songs.append({
             'id': song.id,
             'name': song.name,
