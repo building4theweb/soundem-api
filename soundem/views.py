@@ -1,7 +1,40 @@
-from flask import jsonify
+from flask import jsonify, request
 
-from soundem import app
-from .models import Artist, Album, Song, Favorite
+from soundem import app, db
+from .models import Artist, Album, Song, Favorite, user_datastore
+
+
+@app.route('/api/v1/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    errors = {}
+
+    if not email:
+        errors['email'] = 'Field is required.'
+
+    if not password:
+        errors['password'] = 'Field is required.'
+
+    existing_user = user_datastore.find_user(email=email)
+
+    if existing_user:
+        errors['email'] = 'Email is already taken'
+
+    if errors:
+        return jsonify({'errors': errors}), 400
+
+    user = user_datastore.create_user(email=email, password=password)
+    db.session.commit()
+
+    user_data = {
+        'id': user.id,
+        'email': user.email,
+        'active': user.active
+    }
+
+    return jsonify({'user': user_data}), 201
 
 
 @app.route('/api/v1/artists', methods=['GET'])
