@@ -75,6 +75,9 @@ class Song(db.Model):
 
 class Favorite(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = db.relationship('User',
+                           backref=db.backref('favorites', lazy='dynamic'))
     song_id = db.Column(db.Integer, db.ForeignKey('song.id'))
     song = db.relationship('Song',
                            backref=db.backref('favorites', lazy='dynamic'))
