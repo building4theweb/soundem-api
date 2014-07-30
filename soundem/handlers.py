@@ -7,7 +7,8 @@ from soundem import app
 def bad_request_handler(e):
     return jsonify({
         'status_code': 400,
-        'detail': 'Bad Request'
+        'error': 'Bad Request',
+        'detail': e.description
     })
 
 
@@ -15,7 +16,8 @@ def bad_request_handler(e):
 def unauthorized_handler(e):
     return jsonify({
         'status_code': 401,
-        'detail': 'Unauthorized'
+        'error': 'Unauthorized',
+        'detail': e.description
     })
 
 
@@ -23,5 +25,6 @@ def unauthorized_handler(e):
 def not_found_handler(e):
     return jsonify({
         'status_code': 404,
-        'detail': 'Not Found'
+        'error': 'Not Found',
+        'detail': e.description
     })

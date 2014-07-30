@@ -1,9 +1,8 @@
-from flask import jsonify, request
-from flask.ext.security import utils, current_user
+from flask import g, jsonify, request
 
 from soundem import app, db
 from .decorators import auth_token_required
-from .models import Artist, Album, Song, Favorite, user_datastore
+from .models import Artist, Album, Song, Favorite, User
 
 
 @app.route('/api/v1/login', methods=['POST'])
@@ -19,26 +18,19 @@ def login():
     if not password:
         errors['password'] = 'Field is required.'
 
-    user = user_datastore.get_user(email)
+    user = User.find_by_email(email)
 
     if not user:
         errors['email'] = 'User does not exist.'
-
-    if not utils.verify_and_update_password(password, user):
+    elif not user.check_password(password):
         errors['password'] = 'Invalid password.'
-
-    if not user.is_active():
-        errors['email'] = 'User is not active.'
 
     if errors:
         return jsonify({'errors': errors}), 400
 
-    utils.login_user(user)
-
     user_data = {
         'id': user.id,
         'email': user.email,
-        'active': user.is_active(),
         'token': user.get_auth_token()
     }
 
@@ -58,7 +50,7 @@ def register():
     if not password:
         errors['password'] = 'Field is required.'
 
-    existing_user = user_datastore.get_user(email=email)
+    existing_user = User.find_by_email(email)
 
     if existing_user:
         errors['email'] = 'Email is already taken'
@@ -66,13 +58,11 @@ def register():
     if errors:
         return jsonify({'errors': errors}), 400
 
-    user = user_datastore.create_user(email=email, password=password)
-    db.session.commit()
+    user = User.create(email=email, password=password)
 
     user_data = {
         'id': user.id,
         'email': user.email,
-        'active': user.is_active(),
         'token': user.get_auth_token()
     }
 
@@ -117,7 +107,7 @@ def get_songs():
 
     for song in Song.query.all():
         favorite = Favorite.query.filter_by(
-            song=song, user=current_user).first()
+            song=song, user=g.user).first()
 
         songs.append({
             'id': song.id,
@@ -133,14 +123,14 @@ def get_songs():
 @auth_token_required
 def favorite_song(song_id):
     song = Song.query.filter_by(id=song_id).first_or_404()
-    favorite = Favorite.query.filter_by(song=song, user=current_user).first()
+    favorite = Favorite.query.filter_by(song=song, user=g.user).first()
 
     if favorite:
         is_favorite = False
         db.session.delete(favorite)
     else:
         is_favorite = True
-        favorite = Favorite(song=song, user=current_user)
+        favorite = Favorite(song=song, user=g.user)
         db.session.add(favorite)
 
     db.session.commit()

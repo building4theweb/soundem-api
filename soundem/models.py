@@ -1,29 +1,49 @@
-from flask.ext.security import (Security, SQLAlchemyUserDatastore,
-                                UserMixin, RoleMixin)
-
-from soundem import app, db
+from soundem import db, app
+from .utils import make_password, check_password, generate_token, decode_token
 
 
-roles_users = db.Table(
-    'roles_users',
-    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-    db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
-)
-
-
-class Role(db.Model, RoleMixin):
-    id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(80), unique=True)
-    description = db.Column(db.String(255))
-
-
-class User(db.Model, UserMixin):
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
-    active = db.Column(db.Boolean())
-    roles = db.relationship('Role', secondary=roles_users,
-                            backref=db.backref('users', lazy='dynamic'))
+
+    def __init__(self, email, password):
+        self.email = email
+        self.set_password(password)
+
+    @classmethod
+    def create(cls, email, password):
+        user = User(email=email, password=password)
+        db.session.add(user)
+        db.session.commit()
+
+        return user
+
+    @classmethod
+    def find_by_email(cls, email):
+        return User.query.filter_by(email=email).first()
+
+    @classmethod
+    def find_by_token(cls, token):
+        payload = decode_token(token, app.config['SECRET_KEY'])
+
+        if not payload or 'id' not in payload:
+            return None
+
+        return User.query.filter_by(id=payload['id']).first()
+
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
+
+    def get_auth_token(self):
+        payload = {
+            'id': self.id
+        }
+
+        return generate_token(payload, app.config['SECRET_KEY'])
 
 
 class Artist(db.Model):
@@ -88,8 +108,3 @@ class Favorite(db.Model):
 
     def __repr__(self):
         return '<Favorite %r>' % self.song_id
-
-
-# Setup Flask-Security
-user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-security = Security(app, user_datastore, register_blueprint=False)

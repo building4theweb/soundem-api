@@ -14,9 +14,6 @@ app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = 'super-secret'
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 
-# Flask-Security Config
-app.config['SECURITY_CONFIRMABLE'] = False
-
 # Initialize database
 db = SQLAlchemy(app)
 
