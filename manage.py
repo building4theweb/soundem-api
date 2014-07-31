@@ -4,7 +4,7 @@ import dotenv
 dotenv.read_dotenv()
 
 from flask.ext.script import Manager, prompt_bool
-from soundem import app, db
+from soundem import app, db, fixtures
 
 
 manager = Manager(app)
@@ -21,6 +21,18 @@ def recreate_db():
 
     print "Creating..."
     db.create_all()
+
+
+@manager.command
+def populate_db():
+    """
+    Populates database with sample data
+    """
+    recreate_db()
+
+    print "Populating..."
+
+    fixtures.sample()
 
 
 if __name__ == '__main__':

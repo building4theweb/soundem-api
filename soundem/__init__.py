@@ -1,5 +1,5 @@
+import os
 import logging
-from os import environ
 
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -7,11 +7,13 @@ from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
+BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+
 # App Config
 app.config.update(
-    DEBUG=(environ.get('DEBUG') == 'yes'),
-    SECRET_KEY=environ.get('SECRET_KEY'),
-    SQLALCHEMY_DATABASE_URI=environ.get('DATABASE_URL')
+    DEBUG=(os.environ.get('DEBUG') == 'yes'),
+    SECRET_KEY=os.environ.get('SECRET_KEY'),
+    SQLALCHEMY_DATABASE_URI=os.environ.get('DATABASE_URL')
 )
 
 # Setup Logging
