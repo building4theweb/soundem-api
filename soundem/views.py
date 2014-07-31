@@ -1,11 +1,14 @@
 from flask import g, jsonify, request, abort
 
+from flask_cors import cross_origin
+
 from soundem import app
 from .decorators import auth_token_required
 from .models import Artist, Album, Song, User
 
 
 @app.route('/api/v1/login', methods=['POST'])
+@cross_origin()
 def login():
     data = request.get_json() or {}
     email = data.get('email')
@@ -38,6 +41,7 @@ def login():
 
 
 @app.route('/api/v1/register', methods=['POST'])
+@cross_origin()
 def register():
     data = request.get_json() or {}
     email = data.get('email')
@@ -70,7 +74,8 @@ def register():
 
 
 @app.route('/api/v1/artists', methods=['GET'])
-@auth_token_required
+@auth_token_required()
+@cross_origin()
 def get_artists():
     artists = []
 
@@ -86,7 +91,8 @@ def get_artists():
 
 
 @app.route('/api/v1/albums', methods=['GET'])
-@auth_token_required
+@auth_token_required()
+@cross_origin()
 def get_albums():
     albums = []
 
@@ -101,7 +107,8 @@ def get_albums():
 
 
 @app.route('/api/v1/songs', methods=['GET'])
-@auth_token_required
+@auth_token_required()
+@cross_origin()
 def get_songs():
     songs = []
 
@@ -117,7 +124,8 @@ def get_songs():
 
 
 @app.route('/api/v1/songs/<int:song_id>/favorite', methods=['PUT'])
-@auth_token_required
+@auth_token_required()
+@cross_origin()
 def favorite_song(song_id):
     song, is_favorited = Song.favorite(song_id=song_id, user=g.user)
 
