@@ -83,13 +83,17 @@ class Album(db.Model):
 class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
+    url = db.Column(db.String(255))
     album_id = db.Column(db.Integer, db.ForeignKey('album.id'))
     album = db.relationship('Album',
                             backref=db.backref('songs', lazy='dynamic'))
 
-    def __init__(self, name, album):
+    def __init__(self, name, album, url=None):
         self.name = name
         self.album = album
+
+        if url:
+            self.url = url
 
     @classmethod
     def favorite(cls, song_id, user):
