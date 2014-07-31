@@ -8,6 +8,10 @@
 $ pip install -r requirements.txt
 ```
 
+### Create .env
+
+Create a .env in the root of the project based on `sample.env`.
+
 ### Populate database with sample fixture
 
 ```bash
