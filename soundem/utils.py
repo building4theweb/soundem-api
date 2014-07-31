@@ -1,21 +1,16 @@
-import bcrypt
 import jwt
+from passlib.context import CryptContext
+
+
+password_context = CryptContext(['pbkdf2_sha256'])
 
 
 def make_password(raw_password):
-    return bcrypt.hashpw(
-        raw_password.encode('utf-8'),
-        bcrypt.gensalt()
-    )
+    return password_context.encrypt(raw_password)
 
 
 def check_password(raw_password, password):
-    hashed = bcrypt.hashpw(
-        raw_password.encode('utf-8'),
-        password.encode('utf-8')
-    )
-
-    return hashed == password
+    return password_context.verify(raw_password, password)
 
 
 def generate_token(payload, secret):
