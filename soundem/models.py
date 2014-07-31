@@ -55,8 +55,9 @@ class Artist(db.Model):
         self.name = name
         self.bio = bio
 
-    def __repr__(self):
-        return '<Artist %r>' % self.name
+    @classmethod
+    def get_all(cls):
+        return Artist.query.all()
 
 
 class Album(db.Model):
@@ -74,8 +75,9 @@ class Album(db.Model):
         if artwork_url:
             self.artwork_url = artwork_url
 
-    def __repr__(self):
-        return '<Album %r>' % self.name
+    @classmethod
+    def get_all(cls):
+        return Album.query.all()
 
 
 class Song(db.Model):
@@ -89,8 +91,35 @@ class Song(db.Model):
         self.name = name
         self.album = album
 
-    def __repr__(self):
-        return '<Song %r>' % self.name
+    @classmethod
+    def favorite(cls, song_id, user):
+        song = Song.query.filter_by(id=song_id).first()
+
+        if not song:
+            return None, False
+
+        favorite = Favorite.query.filter_by(song=song, user=user).first()
+
+        if favorite:
+            is_favorited = False
+            db.session.delete(favorite)
+        else:
+            is_favorited = True
+            favorite = Favorite(song=song, user=user)
+            db.session.add(favorite)
+
+        db.session.commit()
+
+        return song, is_favorited
+
+    def is_favorited(self, user):
+        favorite = Favorite.query.filter_by(song=self, user=user).first()
+
+        return True if favorite else False
+
+    @classmethod
+    def get_all(cls):
+        return Song.query.all()
 
 
 class Favorite(db.Model):
@@ -105,6 +134,3 @@ class Favorite(db.Model):
     def __init__(self, song, user):
         self.song = song
         self.user = user
-
-    def __repr__(self):
-        return '<Favorite %r>' % self.song_id

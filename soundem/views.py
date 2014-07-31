@@ -1,13 +1,13 @@
-from flask import g, jsonify, request
+from flask import g, jsonify, request, abort
 
-from soundem import app, db
+from soundem import app
 from .decorators import auth_token_required
-from .models import Artist, Album, Song, Favorite, User
+from .models import Artist, Album, Song, User
 
 
 @app.route('/api/v1/login', methods=['POST'])
 def login():
-    data = request.get_json()
+    data = request.get_json() or {}
     email = data.get('email')
     password = data.get('password')
     errors = {}
@@ -39,7 +39,7 @@ def login():
 
 @app.route('/api/v1/register', methods=['POST'])
 def register():
-    data = request.get_json()
+    data = request.get_json() or {}
     email = data.get('email')
     password = data.get('password')
     errors = {}
@@ -74,7 +74,7 @@ def register():
 def get_artists():
     artists = []
 
-    for artist in Artist.query.all():
+    for artist in Artist.get_all():
         artists.append({
             'id': artist.id,
             'name': artist.name,
@@ -90,7 +90,7 @@ def get_artists():
 def get_albums():
     albums = []
 
-    for album in Album.query.all():
+    for album in Album.get_all():
         albums.append({
             'id': album.id,
             'name': album.name,
@@ -105,15 +105,12 @@ def get_albums():
 def get_songs():
     songs = []
 
-    for song in Song.query.all():
-        favorite = Favorite.query.filter_by(
-            song=song, user=g.user).first()
-
+    for song in Song.get_all():
         songs.append({
             'id': song.id,
             'name': song.name,
             'album': song.album.id,
-            'favorite': True if favorite else False
+            'favorite': song.is_favorited(g.user)
         })
 
     return jsonify({'songs': songs})
@@ -122,24 +119,16 @@ def get_songs():
 @app.route('/api/v1/songs/<int:song_id>/favorite', methods=['PUT'])
 @auth_token_required
 def favorite_song(song_id):
-    song = Song.query.filter_by(id=song_id).first_or_404()
-    favorite = Favorite.query.filter_by(song=song, user=g.user).first()
+    song, is_favorited = Song.favorite(song_id=song_id, user=g.user)
 
-    if favorite:
-        is_favorite = False
-        db.session.delete(favorite)
-    else:
-        is_favorite = True
-        favorite = Favorite(song=song, user=g.user)
-        db.session.add(favorite)
-
-    db.session.commit()
+    if not song:
+        abort(404)
 
     song_data = {
         'id': song.id,
         'name': song.name,
         'album': song.album.id,
-        'favorite': is_favorite
+        'favorite': is_favorited
     }
 
     return jsonify({'song': song_data})
