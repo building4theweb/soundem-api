@@ -28,3 +28,12 @@ def not_found_handler(e):
         'error': 'Not Found',
         'detail': e.description
     }), e.code
+
+
+@app.errorhandler(405)
+def method_not_allowed_handler(e):
+    return jsonify({
+        'status_code': e.code,
+        'error': 'Method Not Allowed',
+        'detail': e.description
+    }), e.code
