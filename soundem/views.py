@@ -1,14 +1,13 @@
-from flask import jsonify, request
-from flask.ext.security import utils, current_user
+from flask import g, jsonify, request, abort
 
-from soundem import app, db
+from soundem import app
 from .decorators import auth_token_required
-from .models import Artist, Album, Song, Favorite, user_datastore
+from .models import Artist, Album, Song, User
 
 
 @app.route('/api/v1/login', methods=['POST'])
 def login():
-    data = request.get_json()
+    data = request.get_json() or {}
     email = data.get('email')
     password = data.get('password')
     errors = {}
@@ -19,26 +18,19 @@ def login():
     if not password:
         errors['password'] = 'Field is required.'
 
-    user = user_datastore.get_user(email)
+    user = User.find_by_email(email)
 
     if not user:
         errors['email'] = 'User does not exist.'
-
-    if not utils.verify_and_update_password(password, user):
+    elif not user.check_password(password):
         errors['password'] = 'Invalid password.'
-
-    if not user.is_active():
-        errors['email'] = 'User is not active.'
 
     if errors:
         return jsonify({'errors': errors}), 400
 
-    utils.login_user(user)
-
     user_data = {
         'id': user.id,
         'email': user.email,
-        'active': user.is_active(),
         'token': user.get_auth_token()
     }
 
@@ -47,7 +39,7 @@ def login():
 
 @app.route('/api/v1/register', methods=['POST'])
 def register():
-    data = request.get_json()
+    data = request.get_json() or {}
     email = data.get('email')
     password = data.get('password')
     errors = {}
@@ -58,7 +50,7 @@ def register():
     if not password:
         errors['password'] = 'Field is required.'
 
-    existing_user = user_datastore.get_user(email=email)
+    existing_user = User.find_by_email(email)
 
     if existing_user:
         errors['email'] = 'Email is already taken'
@@ -66,13 +58,11 @@ def register():
     if errors:
         return jsonify({'errors': errors}), 400
 
-    user = user_datastore.create_user(email=email, password=password)
-    db.session.commit()
+    user = User.create(email=email, password=password)
 
     user_data = {
         'id': user.id,
         'email': user.email,
-        'active': user.is_active(),
         'token': user.get_auth_token()
     }
 
@@ -84,7 +74,7 @@ def register():
 def get_artists():
     artists = []
 
-    for artist in Artist.query.all():
+    for artist in Artist.get_all():
         artists.append({
             'id': artist.id,
             'name': artist.name,
@@ -100,7 +90,7 @@ def get_artists():
 def get_albums():
     albums = []
 
-    for album in Album.query.all():
+    for album in Album.get_all():
         albums.append({
             'id': album.id,
             'name': album.name,
@@ -115,15 +105,12 @@ def get_albums():
 def get_songs():
     songs = []
 
-    for song in Song.query.all():
-        favorite = Favorite.query.filter_by(
-            song=song, user=current_user).first()
-
+    for song in Song.get_all():
         songs.append({
             'id': song.id,
             'name': song.name,
             'album': song.album.id,
-            'favorite': True if favorite else False
+            'favorite': song.is_favorited(g.user)
         })
 
     return jsonify({'songs': songs})
@@ -132,24 +119,16 @@ def get_songs():
 @app.route('/api/v1/songs/<int:song_id>/favorite', methods=['PUT'])
 @auth_token_required
 def favorite_song(song_id):
-    song = Song.query.filter_by(id=song_id).first_or_404()
-    favorite = Favorite.query.filter_by(song=song, user=current_user).first()
+    song, is_favorited = Song.favorite(song_id=song_id, user=g.user)
 
-    if favorite:
-        is_favorite = False
-        db.session.delete(favorite)
-    else:
-        is_favorite = True
-        favorite = Favorite(song=song, user=current_user)
-        db.session.add(favorite)
-
-    db.session.commit()
+    if not song:
+        abort(404)
 
     song_data = {
         'id': song.id,
         'name': song.name,
         'album': song.album.id,
-        'favorite': is_favorite
+        'favorite': is_favorited
     }
 
     return jsonify({'song': song_data})

@@ -1,4 +1,5 @@
-import os
+import logging
+from os import environ
 
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -7,15 +8,16 @@ from flask.ext.sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 # App Config
-BASE_PATH = os.path.dirname(os.path.dirname(__file__))
-DATABASE_URI = 'sqlite:///{}/soundem.db'.format(BASE_PATH)
+app.config.update(
+    DEBUG=(environ.get('DEBUG') == 'yes'),
+    SECRET_KEY=environ.get('SECRET_KEY'),
+    SQLALCHEMY_DATABASE_URI=environ.get('DATABASE_URL')
+)
 
-app.config['DEBUG'] = True
-app.config['SECRET_KEY'] = 'super-secret'
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
-
-# Flask-Security Config
-app.config['SECURITY_CONFIRMABLE'] = False
+# Setup Logging
+logger = logging.getLogger('soundem')
+logger.setLevel(logging.INFO)
+logger.addHandler(logging.StreamHandler())
 
 # Initialize database
 db = SQLAlchemy(app)
