@@ -3,6 +3,7 @@ import logging
 
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask_sslify import SSLify
 
 
 app = Flask(__name__)
@@ -23,5 +24,8 @@ logger.addHandler(logging.StreamHandler())
 
 # Initialize database
 db = SQLAlchemy(app)
+
+# Initialize Flask-SSLify
+sslify = SSLify(app, subdomains=True)
 
 from soundem import models, views, handlers
