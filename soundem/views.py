@@ -41,7 +41,7 @@ def login():
 
 
 @app.route('/api/v1/register', methods=['POST'])
-@cross_origin()
+@cross_origin(headers=['Content-Type'])
 def register():
     data = request.get_json() or {}
     email = data.get('email')
