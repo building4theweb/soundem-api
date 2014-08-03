@@ -8,7 +8,7 @@ from .models import Artist, Album, Song, User
 
 
 @app.route('/api/v1/login', methods=['POST'])
-@cross_origin()
+@cross_origin(headers=['Content-Type'])
 def login():
     data = request.get_json() or {}
     email = data.get('email')
@@ -74,7 +74,7 @@ def register():
 
 
 @app.route('/api/v1/artists', methods=['GET'])
-@cross_origin()
+@cross_origin(headers=['Content-Type'])
 @auth_token_required
 def get_artists():
     artists = []
@@ -91,7 +91,7 @@ def get_artists():
 
 
 @app.route('/api/v1/albums', methods=['GET'])
-@cross_origin()
+@cross_origin(headers=['Content-Type'])
 @auth_token_required
 def get_albums():
     albums = []
@@ -107,7 +107,7 @@ def get_albums():
 
 
 @app.route('/api/v1/songs', methods=['GET'])
-@cross_origin()
+@cross_origin(headers=['Content-Type'])
 @auth_token_required
 def get_songs():
     songs = []
@@ -124,7 +124,7 @@ def get_songs():
 
 
 @app.route('/api/v1/songs/<int:song_id>/favorite', methods=['PUT'])
-@cross_origin()
+@cross_origin(headers=['Content-Type'])
 @auth_token_required
 def favorite_song(song_id):
     song, is_favorited = Song.favorite(song_id=song_id, user=g.user)
