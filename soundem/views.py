@@ -123,7 +123,7 @@ def get_songs():
     return jsonify({'songs': songs})
 
 
-@app.route('/api/v1/songs/<int:song_id>/favorite', methods=['PUT'])
+@app.route('/api/v1/songs/<int:song_id>', methods=['PUT'])
 @cross_origin(headers=['Content-Type', 'Authorization'])
 @auth_token_required
 def favorite_song(song_id):
