@@ -79,21 +79,46 @@ class Album(db.Model):
     def get_all(cls):
         return Album.query.all()
 
+    @classmethod
+    def total_count(cls):
+        return Album.query.count()
+
 
 class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     url = db.Column(db.String(255))
+    duration = db.Column(db.Integer)
     album_id = db.Column(db.Integer, db.ForeignKey('album.id'))
     album = db.relationship('Album',
                             backref=db.backref('songs', lazy='dynamic'))
 
-    def __init__(self, name, album, url=None):
+    def __init__(self, name, album, url=None, duration=None):
         self.name = name
         self.album = album
 
         if url:
             self.url = url
+
+        if duration:
+            self.duration = duration
+
+    @classmethod
+    def get_all(cls):
+        return Song.query.all()
+
+    @classmethod
+    def total_count(cls):
+        return Song.query.count()
+
+    @classmethod
+    def total_duration(cls):
+        duration = 0
+
+        for song in Song.get_all():
+            duration += song.duration
+
+        return duration
 
     @classmethod
     def favorite(cls, song_id, user):
@@ -120,10 +145,6 @@ class Song(db.Model):
         favorite = Favorite.query.filter_by(song=self, user=user).first()
 
         return True if favorite else False
-
-    @classmethod
-    def get_all(cls):
-        return Song.query.all()
 
 
 class Favorite(db.Model):

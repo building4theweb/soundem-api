@@ -140,3 +140,20 @@ def favorite_song(song_id):
     }
 
     return jsonify({'song': song_data})
+
+
+@app.route('/api/v1/users/<int:user_id>', methods=['GET'])
+@cross_origin(headers=['Content-Type', 'Authorization'])
+@auth_token_required
+def user(user_id):
+    user = g.user
+
+    user_data = {
+        'id': user.id,
+        'email': user.email,
+        'songTotal': Song.total_count(),
+        'albumTotal': Album.total_count(),
+        'durationTotal': Song.total_duration()
+    }
+
+    return jsonify({'user': user_data})
