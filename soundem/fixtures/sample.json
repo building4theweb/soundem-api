@@ -1,37 +1,69 @@
 [{
-    "name": "Lana del Rey",
+    "name": "Los Macuanos",
     "bio": "",
     "albums": [{
-        "name": "Ultraviolence",
-        "artwork_url": "http://i.imgur.com/KfVv5mr.jpg",
+        "name": "Ritmo de Amor | Remixes",
+        "artwork_url": "http://s3.amazonaws.com/soundem-media/los-macuanos/artwork.png",
         "songs": [{
-            "name": "Pretty When You Cry",
-            "url": "",
-            "duration": 300
+            "name": "Ritmo de Amor",
+            "url": "http://s3.amazonaws.com/soundem-media/los-macuanos/Los_Macuanos_-_01_-_Ritmo_de_Amor.mp3",
+            "duration": 276
         }, {
-            "name": "Money Power Glory",
-            "url": "",
-            "duration": 300
+            "name": "Ritmo de Amor (Letter D Remix)",
+            "url": "http://s3.amazonaws.com/soundem-media/los-macuanos/Los_Macuanos_-_02_-_Ritmo_de_Amor_Letter_D_Remix.mp3",
+            "duration": 240
         }, {
-            "name": "West Coast",
-            "url": "",
-            "duration": 300
+            "name": "Ritmo de Amor (Sheeqo Beat Remix)",
+            "url": "http://s3.amazonaws.com/soundem-media/los-macuanos/Los_Macuanos_-_03_-_Ritmo_de_Amor_Sheeqo_Beat_Remix.mp3",
+            "duration": 234
+        }, {
+            "name": "Ritmo de Amor (Future Feelings Remix)",
+            "url": "http://s3.amazonaws.com/soundem-media/los-macuanos/Los_Macuanos_-_04_-_Ritmo_de_Amor_Future_Feelings_Remix.mp3",
+            "duration": 234
+        }, {
+            "name": "Ritmo de Amor (DJ Teenage Wolf Remix)",
+            "url": "http://s3.amazonaws.com/soundem-media/los-macuanos/Los_Macuanos_-_05_-_Ritmo_de_Amor_DJ_Teenage_Wolf_Remix.mp3",
+            "duration": 251
+        }, {
+            "name": "Ritmo de Amor (Santos Xtended Remix)",
+            "url": "http://s3.amazonaws.com/soundem-media/los-macuanos/Los_Macuanos_-_06_-_Ritmo_de_Amor_Santos_Xtended_Remix.mp3",
+            "duration": 395
+        }, {
+            "name": "Ritmo de Amor (Pedro Infame Remix)",
+            "url": "http://s3.amazonaws.com/soundem-media/los-macuanos/Los_Macuanos_-_07_-_Ritmo_de_Amor_Pedro_Infame_Remix.mp3",
+            "duration": 317
+        }, {
+            "name": "Ritmo de Amor (Colateral Soundtrack Remix)",
+            "url": "http://s3.amazonaws.com/soundem-media/los-macuanos/Los_Macuanos_-_08_-_Ritmo_de_Amor_Colateral_Soundtrack_Remix.mp3",
+            "duration": 198
+        }, {
+            "name": "Ritmo de Amor (Malandro Remix)",
+            "url": "http://s3.amazonaws.com/soundem-media/los-macuanos/Los_Macuanos_-_09_-_Ritmo_de_Amor_Malandro_Remix.mp3",
+            "duration": 471
         }]
     }]
 }, {
-    "name": "AJ Davila",
+    "name": "Frank Guerrero",
     "bio": "",
     "albums": [{
-        "name": "Terror Amor",
-        "artwork_url": "http://i.imgur.com/0Z7W6hh.jpg",
+        "name": "En Beta 0.1",
+        "artwork_url": "http://s3.amazonaws.com/soundem-media/frank-guerrero-y-su-grupo-ach/album-art.jpg",
         "songs": [{
-            "name": "Animal",
-            "url": "",
-            "duration": 300
+            "name": "Vamos A Tocar Sonero",
+            "url": "http://s3.amazonaws.com/soundem-media/frank-guerrero-y-su-grupo-ach/Frank_Guerrero_y_Su_Grupo_Ach_-_01_-_Vamos_A_Tocar_Sonero.mp3",
+            "duration": 220
         }, {
-            "name": "Dura Como Piedra",
-            "url": "http://upload.wikimedia.org/wikipedia/commons/5/5b/Ludwig_van_Beethoven_-_Symphonie_5_c-moll_-_1._Allegro_con_brio.ogg",
-            "duration": 300
+            "name": "Fui Yo",
+            "url": "http://s3.amazonaws.com/soundem-media/frank-guerrero-y-su-grupo-ach/Frank_Guerrero_y_Su_Grupo_Ach_-_02_-_Fui_Yo.mp3",
+            "duration": 237
+        }, {
+            "name": "Cupido",
+            "url": "http://s3.amazonaws.com/soundem-media/frank-guerrero-y-su-grupo-ach/Frank_Guerrero_y_Su_Grupo_Ach_-_03_-_Cupido.mp3",
+            "duration": 199
+        }, {
+            "name": "Barranquilla Tiene Un Swing",
+            "url": "http://s3.amazonaws.com/soundem-media/frank-guerrero-y-su-grupo-ach/Frank_Guerrero_y_Su_Grupo_Ach_-_04_-_Barranquilla_Tiene_Un__Swing.mp3",
+            "duration": 235
         }]
     }]
 }]
