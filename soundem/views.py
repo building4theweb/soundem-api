@@ -77,17 +77,17 @@ def register():
 @cross_origin(headers=['Content-Type', 'Authorization'])
 @auth_token_required
 def get_artists():
-    artists = []
+    artists_results = []
 
     for artist in Artist.get_all():
-        artists.append({
+        artists_results.append({
             'id': artist.id,
             'name': artist.name,
             'bio': artist.bio,
             'albums': [album.id for album in artist.albums.all()]
         })
 
-    return jsonify({'artists': artists})
+    return jsonify({'artists': artists_results})
 
 
 @app.route('/api/v1/artists/<int:artist_id>', methods=['GET'])
@@ -113,10 +113,10 @@ def get_artist(artist_id):
 @cross_origin(headers=['Content-Type', 'Authorization'])
 @auth_token_required
 def get_albums():
-    albums = []
+    albums_results = []
 
     for album in Album.get_all():
-        albums.append({
+        albums_results.append({
             'id': album.id,
             'name': album.name,
             'artworkURL': album.artwork_url,
@@ -124,7 +124,7 @@ def get_albums():
             'songs': [song.id for song in album.songs.all()]
         })
 
-    return jsonify({'albums': albums})
+    return jsonify({'albums': albums_results})
 
 
 @app.route('/api/v1/albums/<int:album_id>', methods=['GET'])
@@ -151,24 +151,26 @@ def get_album(album_id):
 @cross_origin(headers=['Content-Type', 'Authorization'])
 @auth_token_required
 def get_songs():
-    songs = []
+    songs_results = []
     favorite = request.args.get('favorite')
-    is_favorited = None
+    song_ids = request.args.getlist('ids[]')
 
     if favorite == 'true':
-        is_favorited = True
-    elif favorite == 'false':
-        is_favorited = False
+        songs = Song.get_favorites(g.user)
+    elif song_ids:
+        songs = Song.filter_by_ids(song_ids)
+    else:
+        songs = Song.get_all()
 
-    for song in Song.get_all(user=g.user, is_favorite=is_favorited):
-        songs.append({
+    for song in songs:
+        songs_results.append({
             'id': song.id,
             'name': song.name,
             'album': song.album.id,
             'favorite': song.is_favorited(g.user)
         })
 
-    return jsonify({'songs': songs})
+    return jsonify({'songs': songs_results})
 
 
 @app.route('/api/v1/songs/<int:song_id>', methods=['GET', 'PUT'])

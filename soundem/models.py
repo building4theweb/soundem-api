@@ -112,23 +112,22 @@ class Song(db.Model):
             self.duration = duration
 
     @classmethod
-    def get_all(cls, user=None, is_favorite=None):
-        if user and is_favorite is not None:
-            favorites = Favorite.query.filter_by(user=user)
-            song_ids = [favorite.song_id for favorite in favorites]
-
-            if not song_ids and is_favorite:
-                # No favorite songs to filter
-                return []
-
-            if is_favorite:
-                # Filter by favorite songs
-                return Song.query.filter(Song.id.in_(song_ids))
-            else:
-                # Filter out favorite songs
-                return Song.query.filter(~Song.id.in_(song_ids))
-
+    def get_all(cls):
         return Song.query.all()
+
+    @classmethod
+    def get_favorites(cls, user):
+        favorites = Favorite.query.filter_by(user=user)
+        song_ids = [favorite.song_id for favorite in favorites]
+
+        if song_ids:
+            return Song.filter_by_ids(song_ids)
+
+        return []
+
+    @classmethod
+    def filter_by_ids(cls, song_ids):
+        return Song.query.filter(Song.id.in_(song_ids))
 
     @classmethod
     def get(cls, song_id):
