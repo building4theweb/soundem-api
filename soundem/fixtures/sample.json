@@ -6,13 +6,16 @@
         "artwork_url": "http://i.imgur.com/KfVv5mr.jpg",
         "songs": [{
             "name": "Pretty When You Cry",
-            "url": ""
+            "url": "",
+            "duration": 300
         }, {
             "name": "Money Power Glory",
-            "url": ""
+            "url": "",
+            "duration": 300
         }, {
             "name": "West Coast",
-            "url": ""
+            "url": "",
+            "duration": 300
         }]
     }]
 }, {
@@ -23,10 +26,12 @@
         "artwork_url": "http://i.imgur.com/0Z7W6hh.jpg",
         "songs": [{
             "name": "Animal",
-            "url": ""
+            "url": "",
+            "duration": 300
         }, {
             "name": "Dura Como Piedra",
-            "url": "http://upload.wikimedia.org/wikipedia/commons/5/5b/Ludwig_van_Beethoven_-_Symphonie_5_c-moll_-_1._Allegro_con_brio.ogg"
+            "url": "http://upload.wikimedia.org/wikipedia/commons/5/5b/Ludwig_van_Beethoven_-_Symphonie_5_c-moll_-_1._Allegro_con_brio.ogg",
+            "duration": 300
         }]
     }]
 }]

@@ -31,7 +31,8 @@ def sample():
 
             for song in album['songs']:
                 print '     Creating song: {}'.format(song['name'])
-                _song = Song(name=song['name'], album=_album, url=song['url'])
+                _song = Song(name=song['name'], album=_album,
+                             url=song['url'], duration=song['duration'])
 
                 db.session.add(_song)
 
