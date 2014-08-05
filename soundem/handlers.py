@@ -6,7 +6,7 @@ from soundem import app
 def json_error_handler(e):
     return jsonify({
         'status_code': e.code,
-        'error': 'Bad Request',
+        'error': e.name,
         'detail': e.description
     }), e.code
 
