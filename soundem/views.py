@@ -168,7 +168,8 @@ def get_songs():
             'name': song.name,
             'album': song.album.id,
             'favorite': song.is_favorited(g.user),
-            'duration': song.duration
+            'duration': song.duration,
+            'url': song.url
         })
 
     return jsonify({'songs': songs_results})
@@ -203,7 +204,8 @@ def song(song_id):
         'name': song.name,
         'album': song.album.id,
         'favorite': is_favorited,
-        'duration': song.duration
+        'duration': song.duration,
+        'url': song.url
     }
 
     return jsonify({'song': song_data})
