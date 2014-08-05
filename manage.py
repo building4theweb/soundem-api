@@ -3,8 +3,9 @@ import dotenv
 
 dotenv.read_dotenv()
 
-from flask.ext.script import Manager, prompt_bool
+from flask.ext.script import Manager, prompt, prompt_bool, prompt_pass
 from soundem import app, db, fixtures
+from soundem.models import User
 
 
 manager = Manager(app)
@@ -33,6 +34,18 @@ def populate_db():
     print "Populating..."
 
     fixtures.sample()
+
+
+@manager.command
+def create_user():
+    email = prompt('Email address')
+    password = prompt_pass('Password')
+
+    try:
+        print "Creating user..."
+        User.create(email, password)
+    except:
+        print "Error creating user!"
 
 
 if __name__ == '__main__':
