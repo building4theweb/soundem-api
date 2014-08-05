@@ -100,6 +100,7 @@ def get_albums():
         albums.append({
             'id': album.id,
             'name': album.name,
+            'artworkURL': album.artwork_url,
             'artist': album.artist_id,
             'songs': [song.id for song in album.songs.all()]
         })
