@@ -148,6 +148,9 @@ def favorite_song(song_id):
 def user(user_id):
     user = g.user
 
+    if user.id != user_id:
+        abort(403)
+
     user_data = {
         'id': user.id,
         'email': user.email,
