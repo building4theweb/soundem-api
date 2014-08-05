@@ -8,7 +8,7 @@ from .models import Artist, Album, Song, User
 
 
 @app.route('/api/v1/login', methods=['POST'])
-@cross_origin(headers=['Content-Type'])
+@cross_origin(headers=['Content-Type', 'Authorization'])
 def login():
     data = request.get_json() or {}
     email = data.get('email')
@@ -41,7 +41,7 @@ def login():
 
 
 @app.route('/api/v1/register', methods=['POST'])
-@cross_origin(headers=['Content-Type'])
+@cross_origin(headers=['Content-Type', 'Authorization'])
 def register():
     data = request.get_json() or {}
     email = data.get('email')
