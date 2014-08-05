@@ -111,8 +111,15 @@ def get_albums():
 @auth_token_required
 def get_songs():
     songs = []
+    favorite = request.args.get('favorite')
+    is_favorited = None
 
-    for song in Song.get_all():
+    if favorite == 'true':
+        is_favorited = True
+    elif favorite == 'false':
+        is_favorited = False
+
+    for song in Song.get_all(user=g.user, is_favorite=is_favorited):
         songs.append({
             'id': song.id,
             'name': song.name,
