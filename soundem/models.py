@@ -59,6 +59,10 @@ class Artist(db.Model):
     def get_all(cls):
         return Artist.query.all()
 
+    @classmethod
+    def get(cls, artist_id):
+        return Artist.query.filter_by(id=artist_id).first()
+
 
 class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -78,6 +82,10 @@ class Album(db.Model):
     @classmethod
     def get_all(cls):
         return Album.query.all()
+
+    @classmethod
+    def get(cls, album_id):
+        return Album.query.filter_by(id=album_id).first()
 
     @classmethod
     def total_count(cls):
@@ -123,6 +131,10 @@ class Song(db.Model):
         return Song.query.all()
 
     @classmethod
+    def get(cls, song_id):
+        return Song.query.filter_by(id=song_id).first()
+
+    @classmethod
     def total_count(cls):
         return Song.query.count()
 
@@ -135,26 +147,33 @@ class Song(db.Model):
 
         return duration
 
-    @classmethod
-    def favorite(cls, song_id, user):
-        song = Song.query.filter_by(id=song_id).first()
+    def set_favorite(self, user, favorite):
+        if favorite is True:
+            return self.favorite(user)
 
-        if not song:
-            return None, False
+        if favorite is False:
+            return self.unfavorite(user)
 
-        favorite = Favorite.query.filter_by(song=song, user=user).first()
+    def favorite(self, user):
+        favorite = Favorite.query.filter_by(song=self, user=user).first()
+        is_favorited = True
+
+        if not favorite:
+            favorite = Favorite(song=self, user=user)
+            db.session.add(favorite)
+            db.session.commit()
+
+        return is_favorited
+
+    def unfavorite(self, user):
+        favorite = Favorite.query.filter_by(song=self, user=user).first()
+        is_favorited = False
 
         if favorite:
-            is_favorited = False
             db.session.delete(favorite)
-        else:
-            is_favorited = True
-            favorite = Favorite(song=song, user=user)
-            db.session.add(favorite)
+            db.session.commit()
 
-        db.session.commit()
-
-        return song, is_favorited
+        return is_favorited
 
     def is_favorited(self, user):
         favorite = Favorite.query.filter_by(song=self, user=user).first()

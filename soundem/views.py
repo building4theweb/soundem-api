@@ -90,6 +90,25 @@ def get_artists():
     return jsonify({'artists': artists})
 
 
+@app.route('/api/v1/artists/<int:artist_id>', methods=['GET'])
+@cross_origin(headers=['Content-Type', 'Authorization'])
+@auth_token_required
+def get_artist(artist_id):
+    artist = Artist.get(artist_id)
+
+    if not artist:
+        abort(404)
+
+    artist_data = {
+        'id': artist.id,
+        'name': artist.name,
+        'bio': artist.bio,
+        'albums': [album.id for album in artist.albums.all()]
+    }
+
+    return jsonify({'artist': artist_data})
+
+
 @app.route('/api/v1/albums', methods=['GET'])
 @cross_origin(headers=['Content-Type', 'Authorization'])
 @auth_token_required
@@ -106,6 +125,26 @@ def get_albums():
         })
 
     return jsonify({'albums': albums})
+
+
+@app.route('/api/v1/albums/<int:album_id>', methods=['GET'])
+@cross_origin(headers=['Content-Type', 'Authorization'])
+@auth_token_required
+def get_album(album_id):
+    album = Album.get(album_id)
+
+    if not album:
+        abort(404)
+
+    album_data = {
+        'id': album.id,
+        'name': album.name,
+        'artworkURL': album.artwork_url,
+        'artist': album.artist_id,
+        'songs': [song.id for song in album.songs.all()]
+    }
+
+    return jsonify({'album': album_data})
 
 
 @app.route('/api/v1/songs', methods=['GET'])
@@ -132,14 +171,29 @@ def get_songs():
     return jsonify({'songs': songs})
 
 
-@app.route('/api/v1/songs/<int:song_id>', methods=['PUT'])
+@app.route('/api/v1/songs/<int:song_id>', methods=['GET', 'PUT'])
 @cross_origin(headers=['Content-Type', 'Authorization'])
 @auth_token_required
-def favorite_song(song_id):
-    song, is_favorited = Song.favorite(song_id=song_id, user=g.user)
+def song(song_id):
+    song = Song.get(song_id)
+    is_favorited = None
 
     if not song:
         abort(404)
+
+    if request.method == 'PUT':
+        data = request.get_json() or {}
+        favorite = data.get('favorite')
+
+        if favorite is not None:
+            # Update song if favorite param was sent
+            is_favorited = song.set_favorite(g.user, favorite)
+    else:
+        song = Song.get(song_id)
+
+    if is_favorited is None:
+        # Check if song was favorited
+        is_favorited = song.is_favorited(g.user)
 
     song_data = {
         'id': song.id,
