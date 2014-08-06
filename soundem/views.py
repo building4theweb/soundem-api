@@ -187,7 +187,8 @@ def song(song_id):
 
     if request.method == 'PUT':
         data = request.get_json() or {}
-        favorite = data.get('favorite')
+        data_song = data.get('song') or {}
+        favorite = data_song.get('favorite')
 
         if favorite is not None:
             # Update song if favorite param was sent
