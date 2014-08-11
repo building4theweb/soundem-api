@@ -66,4 +66,52 @@
             "duration": 235
         }]
     }]
+}, {
+    "name": "Tommy Tornado",
+    "bio": "",
+    "albums": [{
+        "name": "Live at Pacific Parc",
+        "artwork_url": "http://s3.amazonaws.com/soundem-media/tommy-tornado/album-art.png",
+        "songs": [{
+            "name": "Mistery Woman",
+            "url": "http://s3.amazonaws.com/soundem-media/tommy-tornado/Tommy_Tornado_-_01_-_Mistery_Woman.mp3",
+            "duration": 298
+        }, {
+            "name": "Gladiator",
+            "url": "http://s3.amazonaws.com/soundem-media/tommy-tornado/Tommy_Tornado_-_02_-_Gladiator.mp3",
+            "duration": 220
+        }, {
+            "name": "Clear Vision feat. Soulmack",
+            "url": "http://s3.amazonaws.com/soundem-media/tommy-tornado/Tommy_Tornado_-_03_-_Clear_Vision_feat_Soulmack.mp3",
+            "duration": 221
+        }, {
+            "name": "Cheatin feat. Soulmack",
+            "url": "http://s3.amazonaws.com/soundem-media/tommy-tornado/Tommy_Tornado_-_04_-_Cheatin_feat_Soulmack.mp3",
+            "duration": 185
+        }, {
+            "name": "Door Peeper",
+            "url": "http://s3.amazonaws.com/soundem-media/tommy-tornado/Tommy_Tornado_-_05_-_Door_Peeper.mp3",
+            "duration": 199
+        }, {
+            "name": "Ruff Tuff",
+            "url": "http://s3.amazonaws.com/soundem-media/tommy-tornado/Tommy_Tornado_-_06_-_Ruff_Tuff.mp3",
+            "duration": 244
+        }, {
+            "name": "Skank it",
+            "url": "http://s3.amazonaws.com/soundem-media/tommy-tornado/Tommy_Tornado_-_07_-_Skank_it.mp3",
+            "duration": 159
+        }, {
+            "name": "Mascarade",
+            "url": "http://s3.amazonaws.com/soundem-media/tommy-tornado/Tommy_Tornado_-_08_-_Mascarade.mp3",
+            "duration": 256
+        }, {
+            "name": "Tight Spot/Rough Style feat. Osagyefo",
+            "url": "http://s3.amazonaws.com/soundem-media/tommy-tornado/Tommy_Tornado_-_09_-_Tight_SpotRough_Style_feat_Osagyefo.mp3",
+            "duration": 456
+        }, {
+            "name": "Closing",
+            "url": "http://s3.amazonaws.com/soundem-media/tommy-tornado/Tommy_Tornado_-_10_-_Closing.mp3",
+            "duration": 431
+        }]
+    }]
 }]
