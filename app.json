@@ -1,0 +1,30 @@
+{
+  "name": "Soundem API",
+  "description": "RESTful API for demo application developed at BFTW.",
+  "keywords": [
+    "demo",
+    "REST API",
+    "python",
+    "flask"
+  ],
+  "website": "http://buildingfortheweb.com",
+  "repository": "https://github.com/building4theweb/soundem-api",
+  "logo": "http://i.imgur.com/e3cYpKo.png",
+  "success_url": "/",
+  "scripts": {
+    "postdeploy": "bundle exec rake bootstrap"
+  },
+  "env": {
+    "SECRET_KEY": {
+      "description": "A secret key for hashings passwords and generating tokens.",
+      "generator": "secret"
+    },
+    "DEBUG": {
+      "description": "Set to 'yes' to enable debug mode.",
+      "value": "no"
+    }
+  },
+  "addons": [
+    "heroku-postgresql:hobby-dev"
+  ]
+}
