@@ -12,11 +12,11 @@ manager = Manager(app)
 
 
 @manager.command
-def recreate_db():
+def recreate_db(confirm=False):
     """
     Recreates database tables
     """
-    if prompt_bool("Do you want to drop existing data?"):
+    if confirm or prompt_bool("Do you want to drop existing data?"):
         print "Dropping..."
         db.drop_all()
 
@@ -25,11 +25,11 @@ def recreate_db():
 
 
 @manager.command
-def populate_db():
+def populate_db(confirm=False):
     """
     Populates database with sample data
     """
-    recreate_db()
+    recreate_db(confirm)
 
     print "Populating..."
 
