@@ -12,7 +12,7 @@
   "logo": "http://i.imgur.com/e3cYpKo.png",
   "success_url": "/",
   "scripts": {
-    "postdeploy": "bundle exec rake bootstrap"
+    "postdeploy": "python app.py populate_db --confirm"
   },
   "env": {
     "SECRET_KEY": {
